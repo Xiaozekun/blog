@@ -6,8 +6,9 @@ from  flask import Flask
 from blog.blueprints.admin import admin_bp
 from blog.blueprints.blog import blog_bp
 from blog.blueprints.auth import auth_bp
-from blog.extensions import db, csrf, bootstrap, ckeditor, moment, mail
+from blog.extensions import db, csrf, bootstrap, ckeditor, moment, mail, loginmanager, migrate
 from blog.settings import config
+from blog.models import Admin
 from blog.fakes import fake_admin,fake_categories,fake_posts,fake_comments
 
 
@@ -19,6 +20,7 @@ def create_app(config_name=None):
     register_blueprints(app)
     register_extensions(app)
     register_commands(app)
+    register_template_context(app)
     return app
 
 def register_blueprints(app):
@@ -33,6 +35,8 @@ def register_extensions(app):
     moment.init_app(app)
     ckeditor.init_app(app)
     mail.init_app(app)
+    loginmanager.init_app(app)
+    migrate.init_app(app,db)
 
 def register_commands(app):
     @app.cli.command()
@@ -52,3 +56,10 @@ def register_commands(app):
         click.echo('Generating the comment...')
         fake_comments(comment)
         click.echo('Done')
+
+
+def register_template_context(app):
+    @app.context_processor
+    def make_template_contest():
+        admin = Admin.query.first()
+        return dict(admin=admin)

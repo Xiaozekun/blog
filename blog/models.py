@@ -1,7 +1,8 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from slugify import slugify
 
-from blog import db
+from blog.extensions import db
 
 
 class Admin(db.Model):
@@ -30,13 +31,15 @@ class Post(db.Model):
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
-    # author = db.relationship('User', back_populates='articles')
-    # author_id = db.Column(db.Integer, db.ForeignKey('User.id'))
-
     category = db.relationship('Category', back_populates='posts')
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     comments = db.relationship('Comment', back_populates='post', cascade='all')
+
+    def __init__(self, *args, **kwargs):
+        super(Post, self).__init__(*args, **kwargs)
+        self.slug = slugify(self.title)
+
 
 class Comment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
