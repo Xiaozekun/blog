@@ -5,7 +5,7 @@ class BaseConfig():
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
-class DevelopmentConfig():
+class DevelopmentConfig(BaseConfig):
     DEBUG = True
 
 class ProductionConfig():

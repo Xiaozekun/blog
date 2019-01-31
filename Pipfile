@@ -12,6 +12,10 @@ flask-sqlalchemy = "*"
 flask-bootstrap = "*"
 python-dotenv = "*"
 pymysql = "*"
+flask-login = "*"
+flask-moment = "*"
+flask-ckeditor = "*"
+flask-mail = "*"
 
 [requires]
 python_version = "3.7"
