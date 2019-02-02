@@ -19,7 +19,6 @@ flask-mail = "*"
 bootstrap-flask = "*"
 flask-migrate = "*"
 unidecode = "*"
-python-slugify = "*"
 
 [requires]
 python_version = "3.7"

@@ -40,6 +40,7 @@ def fake_posts(count=50):
             body=fake.text(2000),
             timestamp=fake.date_time_this_year(),
             category= Category.query.get(random.randint(1, Category.query.count())),
+            can_comment= random.randint(0,1)
         )
         db.session.add(post)
     db.session.commit()

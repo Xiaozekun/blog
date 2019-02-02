@@ -4,7 +4,11 @@ class BaseConfig():
     SECRET_KEY = os.getenv('SECRET_KEY', 'secret)key')
     SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+
     BLOG_POST_PER_PAGE=10
+    BLOG_COMMENT_PER_PAGE = 10
+
+    BLOG_EMAIL = 'xiaozekun2012@gmail.com'
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True

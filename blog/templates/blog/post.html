@@ -51,11 +51,11 @@
                 </div>
             </div>
             <div class="comments" id="comments">
-{#                <h3>{{ pagination.total }} Comments#}
-{#                    <small>#}
-{#                        <a href="{{ url_for('.show_post', post_id=post.id, page=pagination.pages or 1) }}#comments">#}
-{#                            latest</a>#}
-{#                    </small>#}
+                <h3>{{ pagination.total }} Comments
+                    <small>
+                        <a href="{{ url_for('.show_post', post_id=post.id, page=pagination.pages or 1) }}#comments">
+                            latest</a>
+                    </small>
 {#                    {% if current_user.is_authenticated %}#}
 {#                        <form class="float-right" method="post"#}
 {#                              action="{{ url_for('admin.set_comment', post_id=post.id, next=request.full_path) }}">#}
@@ -65,7 +65,7 @@
 {#                            </button>#}
 {#                        </form>#}
 {#                    {% endif %}#}
-{#                </h3>#}
+                </h3>
                 {% if comments %}
                     <ul class="list-group">
                         {% for comment in comments %}

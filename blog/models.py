@@ -1,11 +1,11 @@
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
-from slugify import slugify
+from flask_login import UserMixin
 
 from blog.extensions import db
 
 
-class Admin(db.Model):
+class Admin(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(30))
     password_hash = db.Column(db.String(128))
@@ -20,25 +20,25 @@ class Admin(db.Model):
     def check_password(self,password):
         return check_password_hash(self.password_hash, password)
 
+
+
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(30), unique=True)
     posts = db.relationship('Post', back_populates='category')
+
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+    can_comment = db.Column(db.Boolean, default=True)
 
     category = db.relationship('Category', back_populates='posts')
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
 
     comments = db.relationship('Comment', back_populates='post', cascade='all')
-
-    def __init__(self, *args, **kwargs):
-        super(Post, self).__init__(*args, **kwargs)
-        self.slug = slugify(self.title)
 
 
 class Comment(db.Model):

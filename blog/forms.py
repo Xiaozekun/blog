@@ -44,7 +44,7 @@ class CommentForm(FlaskForm):
     submit = SubmitField('Submit')
 
 
-class AdminCommentForm(FlaskForm):
+class AdminCommentForm(CommentForm):
     author = HiddenField()
     email = HiddenField()
     site = HiddenField()
