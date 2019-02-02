@@ -69,6 +69,7 @@
                 {% if comments %}
                     <ul class="list-group">
                         {% for comment in comments %}
+                            {% if comment.reviewed %}
                             <li class="list-group-item list-group-item-action flex-column">
                                 <div class="d-flex w-100 justify-content-between">
                                     <h5 class="mb-1">
@@ -110,6 +111,7 @@
                                     {% endif %}
                                 </div>
                             </li>
+                        {% endif %}
                         {% endfor %}
                     </ul>
                 {% else %}

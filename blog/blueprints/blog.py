@@ -53,7 +53,11 @@ def show_post(post_id):
         site = form.site.data
         body = form.body.data
         comment = Comment(author=author, site=site, email=email, body=body,
-                          from_admin=from_admin, reviewed=reviewed)
+                          from_admin=from_admin, reviewed=reviewed, post=post)
+        replied_id = request.args.get('reply')
+        replied_comment = Comment.query.get_or_404(replied_id)
+        comment.replied = replied_comment
+        # TODO 发送邮件给被回复的人
         db.session.add(comment)
         db.session.commit()
         if current_user.is_authenticated:
@@ -72,4 +76,4 @@ def reply_comment(comment_id):
     if not comment.post.can_comment:
         flash("Post can't comment.",'warning')
         return redirect(url_for('.show_post', post_id=comment.post_id))
-    return redirect(url_for('.show_post', author=comment.author, reply=True, post_id=comment.post_id)+'#comment-form')
+    return redirect(url_for('.show_post', author=comment.author, reply=comment_id, post_id=comment.post_id)+'#comment-form')
