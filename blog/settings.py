@@ -10,6 +10,9 @@ class BaseConfig():
 
     BLOG_EMAIL = 'xiaozekun2012@gmail.com'
 
+    BLOG_THEMES = {'perfect_blue': 'Perfect Blue',
+                   'black_swan': 'Black Swan'}
+
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
 
