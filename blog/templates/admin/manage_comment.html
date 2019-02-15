@@ -42,7 +42,7 @@
             </thead>
             {% for comment in comments %}
                 <tr {% if not comment.reviewed %}class="table-warning" {% endif %}>
-                    <td>{{ loop.index + ((pagination.page - 1) * config['BLUELOG_COMMENT_PER_PAGE']) }}</td>
+                    <td>{{ loop.index + ((pagination.page - 1) * config['BLOG_COMMENT_PER_PAGE']) }}</td>
                     <td>
                         {% if comment.from_admin %}{{ admin.name }}{% else %}{{ comment.author }}{% endif %}<br>
                         {% if comment.site %}
@@ -66,7 +66,7 @@
                                 <button type="submit" class="btn btn-success btn-sm">Approve</button>
                             </form>
                         {% endif %}
-                        <a class="btn btn-info btn-sm" href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">Post</a>
+{#                        <a class="btn btn-info btn-sm" href="{{ url_for('blog.show_post', post_id=comment.post.id) }}">Post</a>#}
                         <form class="inline" method="post"
                               action="{{ url_for('.delete_comment', comment_id=comment.id, next=request.full_path) }}">
                             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}"/>

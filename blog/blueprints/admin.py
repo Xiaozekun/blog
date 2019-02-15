@@ -122,4 +122,17 @@ def set_comment(post_id):
 
 @admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
 def delete_comment(comment_id):
-    pass
+    comment = Comment.query.get_or_404(comment_id)
+    db.session.delete(comment)
+    db.session.commit()
+    flash('Comment deleted.', 'success')
+    return redirect_back()
+
+
+@admin_bp.route('/comment/<int:comment_id>/approve', methods=['POST'])
+def approve_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    comment.reviewed = True
+    db.session.commit()
+    flash('Comment published.', 'success')
+    return redirect_back()
