@@ -1,10 +1,13 @@
-from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request
+import os
+
+from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request, send_from_directory
 from flask_login import login_required, current_user
+from flask_ckeditor import upload_success, upload_fail
 
 from blog.forms import SettingForm, PostForm, CategoryForm, LinkForm
 from blog.extensions import db
 from blog.models import Post, Category, Comment, Link
-from blog.utils import redirect_back
+from blog.utils import redirect_back, allowed_file
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -218,3 +221,18 @@ def delete_link(link_id):
     db.session.commit()
     flash('Delete success.', 'success')
     return redirect(url_for('.manage_link'))
+
+
+@admin_bp.route('/uploads/<path:filename>')
+def get_image(filename):
+    return send_from_directory(current_app.config['BLOG_UPLOAD_PATH'], filename)
+
+
+@admin_bp.route('/uploads', methods=['POST'])
+def upload_image():
+    f = request.files.get('upload')
+    if not allowed_file(f.filename):
+        return upload_fail('Image only!')
+    f.save(os.path.join(current_app.config['BLOG_UPLOAD_PATH'], f.filename))
+    url = url_for('.get_image', filename=f.filename)
+    return upload_success(url, f.filename)
