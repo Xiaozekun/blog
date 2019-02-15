@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request
 from flask_login import login_required, current_user
 
-from blog.forms import SettingForm, PostForm, CategoryForm
+from blog.forms import SettingForm, PostForm, CategoryForm, LinkForm
 from blog.extensions import db
-from blog.models import Post, Category, Comment
+from blog.models import Post, Category, Comment, Link
 from blog.utils import redirect_back
 
 admin_bp = Blueprint('admin', __name__)
@@ -147,8 +147,7 @@ def delete_category(category_id):
 
 @admin_bp.route('/category/manage')
 def manage_category():
-    categories = Category.query.all()
-    return render_template('admin/manage_category.html', categories=categories)
+    return render_template('admin/manage_category.html')
 
 
 @admin_bp.route('/category/new', methods=['GET', 'POST'])
@@ -163,7 +162,7 @@ def new_category():
     return render_template('admin/new_category.html', form=form)
 
 
-@admin_bp.route('/category/<int:category_id>edit', methods=['GET','POST'])
+@admin_bp.route('/category/<int:category_id>edit', methods=['GET', 'POST'])
 def edit_category(category_id):
     if category_id == 1:
         flash(u'禁止修改默认分类', 'warning')
@@ -176,3 +175,46 @@ def edit_category(category_id):
         return redirect_back()
     form.name.data = category.name
     return render_template('admin/edit_category.html', form=form)
+
+
+@admin_bp.route('/link/manage')
+def manage_link():
+    return render_template('admin/manage_link.html')
+
+
+@admin_bp.route('/link/new', methods=['GET', 'POST'])
+def new_link():
+    form = LinkForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        url = form.url.data
+        link = Link(name=name, url=url)
+        db.session.add(link)
+        db.session.commit()
+        flash('Linke created.', 'success')
+        return redirect(url_for('.manage_link'))
+    return render_template('admin/new_link.html', form=form)
+
+
+@admin_bp.route('/link/<int:link_id>/edit', methods=['GET', 'POST'])
+def edit_link(link_id):
+    form = LinkForm()
+    link = Link.query.get_or_404(link_id)
+    if form.validate_on_submit():
+        link.name = form.name.data
+        link.url = form.url.data
+        db.session.commit()
+        flash('Link updated.', 'success')
+        return redirect(url_for('.manage_link'))
+    form.name.data = link.name
+    form.url.data = link.url
+    return render_template('admin/edit_link.html', form=form)
+
+
+@admin_bp.route('/link/<int:link_id>/delete', methods=['POST'])
+def delete_link(link_id):
+    link = Link.query.get_or_404(link_id)
+    db.session.delete(link)
+    db.session.commit()
+    flash('Delete success.', 'success')
+    return redirect(url_for('.manage_link'))

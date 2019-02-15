@@ -8,6 +8,7 @@ from blog.extensions import db
 
 fake = Faker(locale='zh_CN')
 
+
 def fake_admin():
     db.create_all()
     admin = Admin(
@@ -33,14 +34,15 @@ def fake_categories(count=10):
         except IntegrityError:
             db.session.rollback()
 
+
 def fake_posts(count=50):
-    for i in  range(count):
+    for i in range(count):
         post = Post(
             title=fake.sentence(),
             body=fake.text(2000),
             timestamp=fake.date_time_this_year(),
-            category= Category.query.get(random.randint(1, Category.query.count())),
-            can_comment= random.randint(0,1)
+            category=Category.query.get(random.randint(1, Category.query.count())),
+            can_comment=random.randint(0, 1)
         )
         db.session.add(post)
     db.session.commit()
@@ -59,8 +61,8 @@ def fake_comments(count=500):
         )
         db.session.add(comment)
 
-    salt = int(count*0.1)
-    for i in  range(salt):
+    salt = int(count * 0.1)
+    for i in range(salt):
         comment = Comment(
             email=fake.email(),
             site=fake.url(),
@@ -84,7 +86,7 @@ def fake_comments(count=500):
         db.session.add(comment)
     db.session.commit()
 
-    for i in  range(salt):
+    for i in range(salt):
         comment = Comment(
             email=fake.email(),
             site=fake.url(),

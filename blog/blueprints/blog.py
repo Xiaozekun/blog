@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, current_app, url_for, flash, redirect, abort, make_response
-from flask_login import login_required, current_user
+from flask_login import current_user
 
 from blog.models import Post, Category, Comment
 from blog.forms import AdminCommentForm, CommentForm

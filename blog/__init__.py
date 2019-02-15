@@ -10,7 +10,7 @@ from blog.blueprints.blog import blog_bp
 from blog.blueprints.auth import auth_bp
 from blog.extensions import db, csrf, bootstrap, ckeditor, moment, mail, login_manager, migrate
 from blog.settings import config
-from blog.models import Admin, Category, Comment
+from blog.models import Admin, Category, Comment, Link
 from blog.fakes import fake_admin, fake_categories, fake_posts, fake_comments
 
 
@@ -76,8 +76,6 @@ def register_commands(app):
 
     @app.cli.command()
     @click.option('--username', prompt=True, help='The username used to login.')
-    # @click.option('--password', prompt=True, hide_input=True, confirmation_prompt=True,
-    #               help='The password used to login.')
     @click.password_option()
     def init(username, password):
         click.echo('Initializing the database...')
@@ -92,8 +90,8 @@ def register_commands(app):
             admin = Admin(
                 username='admin',
                 name='Xiaozekun',
-                about='编程工程师',
-                blog_title='我的BLOG',
+                about='Python开发',
+                blog_title='LIHFTS',
                 blog_sub_title='lihfts'
             )
             admin.set_password(password)
@@ -111,11 +109,13 @@ def register_template_context(app):
     @app.context_processor
     def make_template_contest():
         admin = Admin.query.first()
+        links = Link.query.order_by(Link.name).all()
+        categories = Category.query.order_by(Category.name).all()
         if current_user.is_authenticated:
             unread_comments = Comment.query.filter_by(reviewed=False).count()
         else:
             unread_comments = None
-        return dict(admin=admin, unread_comments=unread_comments)
+        return dict(admin=admin, unread_comments=unread_comments, categories=categories, links=links)
 
 
 def register_errors(app):
