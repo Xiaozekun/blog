@@ -20,7 +20,7 @@ def login():
         admin = Admin.query.first()
         if admin:
             if admin.username == username and admin.check_password(password):
-                flash('Login successfully')
+                flash('Login successfully', 'info')
                 login_user(user=admin, remember=remember)
                 return redirect_back()
             else:

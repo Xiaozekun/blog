@@ -7,15 +7,16 @@ from blog.models import Category
 
 
 class LoginForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired(), Length(1,30)])
-    password = PasswordField('Password', validators=[DataRequired(), Length(8,128)])
+    username = StringField('Username', validators=[DataRequired(), Length(1, 30)])
+    password = PasswordField('Password', validators=[DataRequired(), Length(8, 128)])
     remember = BooleanField('Remember me')
-    submit = SubmitField('Submit')
+    submit = SubmitField()
+
 
 class PostForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired(), Length(1,60)])
+    title = StringField('Title', validators=[DataRequired(), Length(1, 60)])
     body = CKEditorField('Body', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    submit = SubmitField()
     category = SelectField('category', coerce=int, default=1)
 
     def __init__(self, *args, **kwargs):
@@ -26,8 +27,8 @@ class PostForm(FlaskForm):
 
 
 class CategoryForm(FlaskForm):
-    name = StringField('Name', validators=[DataRequired(), Length(1,30)])
-    submit = SubmitField('Submit')
+    name = StringField('Name', validators=[DataRequired(), Length(1, 30)])
+    submit = SubmitField()
 
     # 自定义验证是否重复
     def validate_name(self, field):
@@ -36,15 +37,23 @@ class CategoryForm(FlaskForm):
 
 
 class CommentForm(FlaskForm):
-    email = StringField('Email', validators=[DataRequired(), Length(1,255), Email()])
+    email = StringField('Email', validators=[DataRequired(), Length(1, 255), Email()])
     # site 可以为0,所以0~255
-    site = StringField('Site', validators=[Optional(), URL(), Length(0,255)])
-    author = StringField('Author', validators=[DataRequired(), Length(1,30)])
+    site = StringField('Site', validators=[Optional(), URL(), Length(0, 255)])
+    author = StringField('Author', validators=[DataRequired(), Length(1, 30)])
     body = TextAreaField('Body', validators=[DataRequired()])
-    submit = SubmitField('Submit')
+    submit = SubmitField()
 
 
 class AdminCommentForm(CommentForm):
     author = HiddenField()
     email = HiddenField()
     site = HiddenField()
+
+
+class SettingForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(1, 70)])
+    blog_title = StringField('Blog Title', validators=[DataRequired(), Length(1, 60)])
+    blog_sub_title = StringField('Blog Sub Title', validators=[DataRequired(), Length(1, 100)])
+    about = CKEditorField('About Page', validators=[DataRequired()])
+    submit = SubmitField()
