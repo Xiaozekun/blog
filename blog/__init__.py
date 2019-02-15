@@ -3,13 +3,14 @@ import click
 
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFError
+from flask_login import current_user
 
 from blog.blueprints.admin import admin_bp
 from blog.blueprints.blog import blog_bp
 from blog.blueprints.auth import auth_bp
 from blog.extensions import db, csrf, bootstrap, ckeditor, moment, mail, login_manager, migrate
 from blog.settings import config
-from blog.models import Admin, Category
+from blog.models import Admin, Category, Comment
 from blog.fakes import fake_admin, fake_categories, fake_posts, fake_comments
 
 
@@ -110,7 +111,11 @@ def register_template_context(app):
     @app.context_processor
     def make_template_contest():
         admin = Admin.query.first()
-        return dict(admin=admin)
+        if current_user.is_authenticated:
+            unread_comments = Comment.query.filter_by(reviewed=False).count()
+        else:
+            unread_comments = None
+        return dict(admin=admin, unread_comments=unread_comments)
 
 
 def register_errors(app):
