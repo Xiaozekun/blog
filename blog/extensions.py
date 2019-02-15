@@ -7,7 +7,6 @@ from flask_mail import Mail
 from flask_login import LoginManager
 from flask_migrate import Migrate
 
-
 db = SQLAlchemy()
 bootstrap = Bootstrap()
 csrf = CSRFProtect()
@@ -15,5 +14,12 @@ moment = Moment()
 ckeditor = CKEditor()
 mail = Mail()
 migrate = Migrate()
-loginmanager=LoginManager()
-loginmanager.login_view='auth.login'
+loginmanager = LoginManager()
+loginmanager.login_view = 'auth.login'
+
+
+@loginmanager.user_loader
+def load_user(user_id):
+    from blog.models import Admin
+    user = Admin.query.get(int(user_id))
+    return user
