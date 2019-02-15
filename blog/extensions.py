@@ -14,11 +14,13 @@ moment = Moment()
 ckeditor = CKEditor()
 mail = Mail()
 migrate = Migrate()
-loginmanager = LoginManager()
-loginmanager.login_view = 'auth.login'
+login_manager = LoginManager()
+login_manager.login_view = 'auth.login'
+login_manager.login_message_category = 'warning'
+login_manager.login_message = u'请先登录'
 
 
-@loginmanager.user_loader
+@login_manager.user_loader
 def load_user(user_id):
     from blog.models import Admin
     user = Admin.query.get(int(user_id))
