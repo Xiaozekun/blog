@@ -136,3 +136,22 @@ def approve_comment(comment_id):
     db.session.commit()
     flash('Comment published.', 'success')
     return redirect_back()
+
+
+@admin_bp.route('/category/<int:category_id>/delete', methods=['POST'])
+def delete_category(category_id):
+    if category_id == 1:
+        flash('Can not delete default category.', 'warning')
+        return redirect_back()
+    category = Category.query.get_or_404(category_id)
+    category.delete()
+    flash('Category deleted.', 'success')
+    return redirect_back(url_for('.manage_category'))
+
+
+@admin_bp.route('/category/manage')
+def manage_category():
+    categories = Category.query.all()
+    return render_template('admin/manage_category.html', categories=categories)
+
+

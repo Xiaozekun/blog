@@ -52,6 +52,7 @@ def show_post(post_id):
         form = CommentForm()
         from_admin = False
         reviewed = False
+
     if form.validate_on_submit():
         author = form.author.data
         email = form.email.data
@@ -60,9 +61,10 @@ def show_post(post_id):
         comment = Comment(author=author, site=site, email=email, body=body,
                           from_admin=from_admin, reviewed=reviewed, post=post)
         replied_id = request.args.get('reply')
-        replied_comment = Comment.query.get_or_404(replied_id)
-        comment.replied = replied_comment
-        # TODO 发送邮件给被回复的人
+        if replied_id:
+            replied_comment = Comment.query.get_or_404(replied_id)
+            comment.replied = replied_comment
+            # TODO 发送邮件给被回复的人
         db.session.add(comment)
         db.session.commit()
         if current_user.is_authenticated:
