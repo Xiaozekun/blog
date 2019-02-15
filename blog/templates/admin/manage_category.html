@@ -29,8 +29,8 @@
                     <td>{{ category.posts|length }}</td>
                     <td>
                         {% if category.id != 1 %}
-{#                            <a class="btn btn-info btn-sm"#}
-{#                               href="{{ url_for('.edit_category', category_id=category.id) }}">Edit</a>#}
+                            <a class="btn btn-info btn-sm"
+                               href="{{ url_for('.edit_category', category_id=category.id, next=request.full_path) }}">Edit</a>
 
                             <form class="inline" method="post"
                                   action="{{ url_for('.delete_category', category_id=category.id) }}">

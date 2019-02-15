@@ -37,7 +37,7 @@ class Category(db.Model):
 
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(60))
+    title = db.Column(db.String(60), unique=True)
     body = db.Column(db.Text)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
     can_comment = db.Column(db.Boolean, default=True)
@@ -64,4 +64,4 @@ class Comment(db.Model):
     replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
     replied_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
 
-    replies = db.relationship('Comment', back_populates='replied', cascade='all')
+    replies = db.relationship('Comment', back_populates='replied', cascade='all, delete-orphan')

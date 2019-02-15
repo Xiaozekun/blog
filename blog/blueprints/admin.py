@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, flash, redirect, url_for, current_app, request
 from flask_login import login_required, current_user
 
-from blog.forms import SettingForm, PostForm
+from blog.forms import SettingForm, PostForm, CategoryForm
 from blog.extensions import db
 from blog.models import Post, Category, Comment
 from blog.utils import redirect_back
@@ -50,17 +50,13 @@ def new_post():
         title = form.title.data
         body = form.body.data
         category = Category.query.get(form.category.data)
-        post = Post.query.filter_by(title=title).first()
-        if post:
-            flash(u'已有文章', 'warning')
-        else:
-            post = Post(title=title,
-                        body=body,
-                        category=category)
-            db.session.add(post)
-            db.session.commit()
-            flash('Post created.', 'success')
-            return redirect(url_for('.manage_post'))
+        post = Post(title=title,
+                    body=body,
+                    category=category)
+        db.session.add(post)
+        db.session.commit()
+        flash('Post created.', 'success')
+        return redirect(url_for('.manage_post'))
     return render_template('admin/new_post.html', form=form)
 
 
@@ -155,3 +151,28 @@ def manage_category():
     return render_template('admin/manage_category.html', categories=categories)
 
 
+@admin_bp.route('/category/new', methods=['GET', 'POST'])
+def new_category():
+    form = CategoryForm()
+    if form.validate_on_submit():
+        name = form.name.data
+        category = Category(name=name)
+        db.session.add(category)
+        db.session.commit()
+        return redirect(url_for('.manage_category'))
+    return render_template('admin/new_category.html', form=form)
+
+
+@admin_bp.route('/category/<int:category_id>edit', methods=['GET','POST'])
+def edit_category(category_id):
+    if category_id == 1:
+        flash(u'禁止修改默认分类', 'warning')
+    category = Category.query.get_or_404(category_id)
+    form = CategoryForm()
+    if form.validate_on_submit():
+        category.name = form.name.data
+        db.session.commit()
+        flash('Category updated.', 'success')
+        return redirect_back()
+    form.name.data = category.name
+    return render_template('admin/edit_category.html', form=form)
