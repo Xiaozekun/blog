@@ -6,7 +6,7 @@ from flask import Flask
 from blog.blueprints.admin import admin_bp
 from blog.blueprints.blog import blog_bp
 from blog.blueprints.auth import auth_bp
-from blog.extensions import db, csrf, bootstrap, ckeditor, moment, mail, loginmanager, migrate
+from blog.extensions import db, csrf, bootstrap, ckeditor, moment, mail, login_manager, migrate
 from blog.settings import config
 from blog.models import Admin, Category
 from blog.fakes import fake_admin, fake_categories, fake_posts, fake_comments
@@ -37,7 +37,7 @@ def register_extensions(app):
     moment.init_app(app)
     ckeditor.init_app(app)
     mail.init_app(app)
-    loginmanager.init_app(app)
+    login_manager.init_app(app)
     migrate.init_app(app, db)
 
 
