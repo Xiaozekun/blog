@@ -15,6 +15,7 @@ class BaseConfig():
                    'black_swan': 'Black Swan'}
 
     BLOG_MANAGE_POST_PER_PAGE = 20
+    BLOG_MANAGE_COMMENT_PER_PAGE = 50
 
 
 class DevelopmentConfig(BaseConfig):

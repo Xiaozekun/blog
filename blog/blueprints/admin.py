@@ -3,9 +3,8 @@ from flask_login import login_required, current_user
 
 from blog.forms import SettingForm, PostForm
 from blog.extensions import db
-from blog.models import Post, Category
+from blog.models import Post, Category, Comment
 from blog.utils import redirect_back
-
 
 admin_bp = Blueprint('admin', __name__)
 
@@ -89,3 +88,38 @@ def delete_post(post_id):
     db.session.commit()
     flash('Post Deleted.', 'success')
     return redirect_back()
+
+
+@admin_bp.route('/comment/manage', methods=['GET', 'POST'])
+def manage_comment():
+    # 提供过滤选项
+    filter_rule = request.args.get('filter', 'all')
+    if filter_rule == 'unread':
+        filter_comments = Comment.query.filter_by(reviewed=False)
+    elif filter_rule == 'admin':
+        filter_comments = Comment.query.filter_by(from_admin=True)
+    else:
+        filter_comments = Comment.query
+    page = request.args.get('page', default=1, type=int)
+    per_page = current_app.config['BLOG_MANAGE_COMMENT_PER_PAGE']
+    pagination = filter_comments.order_by(Comment.timestamp.desc()).paginate(page=page, per_page=per_page)
+    comments = pagination.items
+    return render_template('admin/manage_comment.html', comments=comments, pagination=pagination, page=page)
+
+
+@admin_bp.route('/set-comment/<int:post_id>', methods=['POST'])
+def set_comment(post_id):
+    post = Post.query.get_or_404(post_id)
+    if post.can_comment:
+        post.can_comment = False
+        flash('Comment disabled.', 'info')
+    else:
+        post.can_comment = True
+        flash('Comment enabled.', 'info')
+    db.session.commit()
+    return redirect_back()
+
+
+@admin_bp.route('/comment/<int:comment_id>/delete', methods=['POST'])
+def delete_comment(comment_id):
+    pass

@@ -9,9 +9,9 @@ def is_safe_url(target):
 
 
 def redirect_back(default='blog.index', **kwargs):
-    for target in request.args.get('next') and request.referrer:
+    for target in request.args.get('next'), request.referrer:
         if not target:
             continue
         if is_safe_url(target):
-            redirect(target)
+            return redirect(target)
     return redirect(url_for(default, **kwargs))
