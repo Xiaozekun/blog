@@ -5,6 +5,7 @@ from blog.models import Post, Category, Comment
 from blog.forms import AdminCommentForm, CommentForm
 from blog.extensions import db
 from blog.utils import redirect_back
+from blog.emails import send_new_comment_email, send_new_reply_email
 
 blog_bp = Blueprint('blog', __name__)
 
@@ -65,6 +66,7 @@ def show_post(post_id):
             replied_comment = Comment.query.get_or_404(replied_id)
             comment.replied = replied_comment
             # TODO 发送邮件给被回复的人
+            send_new_reply_email(replied_comment)
         db.session.add(comment)
         db.session.commit()
         if current_user.is_authenticated:
@@ -72,6 +74,7 @@ def show_post(post_id):
         else:
             flash('Thanks, your comment will be published after reviewed.', 'info')
             # TODO 发送邮件给管理员
+            send_new_comment_email(post)
         return redirect(url_for('.show_post', post_id=post_id))
     return render_template('blog/post.html', post=post, comments=comments, pagination=pagination, form=form)
 
