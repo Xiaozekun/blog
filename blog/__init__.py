@@ -22,7 +22,7 @@ basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 def create_app(config_name=None):
     if config_name is None:
         config_name = os.getenv('FLAKS_ENV', 'development')
-    app = Flask(__name__)
+    app = Flask('blog')
     app.config.from_object(config[config_name])
     register_blueprints(app)
     register_extensions(app)
