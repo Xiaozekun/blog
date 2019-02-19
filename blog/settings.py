@@ -37,7 +37,7 @@ class DevelopmentConfig(BaseConfig):
     DEBUG = True
 
 
-class ProductionConfig:
+class ProductionConfig(BaseConfig):
     pass
 
 
