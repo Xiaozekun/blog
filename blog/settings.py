@@ -1,11 +1,11 @@
-import os, sys
+import os
 
 basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
-class BaseConfig():
+class BaseConfig:
     SECRET_KEY = os.getenv('SECRET_KEY')
-    SQLALCHEMY_DATABASE_URI = os.getenv('DATABASE_URI')
+    SQLALCHEMY_DATABASE_URI = os.getenv('SQLALCHEMY_DATABASE_URI')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     CKEDITOR_ENABLE_CSRF = True
