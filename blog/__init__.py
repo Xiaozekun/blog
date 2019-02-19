@@ -29,6 +29,7 @@ def create_app(config_name=None):
     register_commands(app)
     register_template_context(app)
     register_errors(app)
+    register_logging(app)
     return app
 
 
@@ -47,7 +48,6 @@ def register_extensions(app):
     mail.init_app(app)
     login_manager.init_app(app)
     migrate.init_app(app, db)
-    register_logging(app)
 
 
 def register_commands(app):
